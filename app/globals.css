@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink: #222222;
+  --mute: #6a6a6a;
+  --airbnb: #ff385c;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: var(--ink);
+  background: #fff;
+  font-family: "Nunito Sans", Circular, -apple-system, BlinkMacSystemFont, Roboto,
+    "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.listing-shell {
+  width: min(1120px, calc(100% - 80px));
+  margin-inline: auto;
+}
+
+@media (max-width: 1127px) {
+  .listing-shell {
+    width: calc(100% - 48px);
+  }
+}
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 8px;
+  height: 464px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.photo-grid > :first-child {
+  grid-row: 1 / span 2;
+}
+
+.link-underline {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.cal-range {
+  background: #f7f7f7;
+}
+
+.cal-start {
+  background: #222;
+  color: #fff;
+  border-radius: 50%;
+}
+
+.cal-end {
+  background: #222;
+  color: #fff;
+  border-radius: 50%;
+}
