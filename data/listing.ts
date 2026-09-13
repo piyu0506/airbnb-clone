@@ -1,17 +1,14 @@
+const mus = (id: string, w = 1200) =>
+  `https://a0.muscache.com/im/pictures/hosting/Hosting-1599895892448055764/original/${id}.jpeg?im_w=${w}`;
+
 export const IMG = {
-  hero: "https://a0.muscache.com/im/pictures/hosting/Hosting-1599895892448055764/original/090d8b0b-b539-42c0-84f8-e1fb0cdf9a93.jpeg?im_w=1200",
-  livingOpen:
-    "https://a0.muscache.com/im/pictures/hosting/Hosting-1599895892448055764/original/9be71047-fc52-438a-9270-75cb470f6752.jpeg?im_w=720",
-  jacuzzi:
-    "https://a0.muscache.com/im/pictures/hosting/Hosting-1599895892448055764/original/f6de1663-4e9c-4414-b63b-29a154a92ee1.jpeg?im_w=720",
-  bedroom:
-    "https://a0.muscache.com/im/pictures/hosting/Hosting-1599895892448055764/original/67c61c6f-6260-4809-9510-0360e58a345d.jpeg?im_w=720",
-  exterior:
-    "https://a0.muscache.com/im/pictures/hosting/Hosting-1599895892448055764/original/56c44812-52c0-4481-90d8-101ec1f34c7a.jpeg?im_w=720",
-  livingRoom:
-    "https://a0.muscache.com/im/pictures/hosting/Hosting-1599895892448055764/original/a9831aeb-f441-44f5-a38f-4cf54e3f0fcf.jpeg?im_w=720",
-  extra1:
-    "https://a0.muscache.com/im/pictures/hosting/Hosting-1599895892448055764/original/c904e1ab-a39d-4ef0-bdea-8c0bd16b9e3d.jpeg?im_w=720",
+  hero: mus("090d8b0b-b539-42c0-84f8-e1fb0cdf9a93"),
+  livingOpen: mus("9be71047-fc52-438a-9270-75cb470f6752", 720),
+  jacuzzi: mus("f6de1663-4e9c-4414-b63b-29a154a92ee1", 720),
+  bedroom: mus("67c61c6f-6260-4809-9510-0360e58a345d", 720),
+  exterior: mus("23ea6621-6f74-4baa-acea-2fd03e312b41", 720),
+  livingRoom: mus("a9831aeb-f441-44f5-a38f-4cf54e3f0fcf", 720),
+  extra1: mus("c904e1ab-a39d-4ef0-bdea-8c0bd16b9e3d", 720),
   host: "https://a0.muscache.com/im/pictures/user/User/original/6b72f8b5-0e66-4bf1-8ba3-ff0f87ff3687.jpeg?im_w=240",
   laurelL:
     "https://a0.muscache.com/im/pictures/airbnb-platform-assets/AirbnbPlatformAssets-GuestFavorite/original/78b7687c-5acf-4ef8-a5ea-eda732ae3b2f.png?im_w=240",
@@ -37,14 +34,141 @@ export const listing = {
   mapLine: "Candolim, Goa, India",
 };
 
-export const photos = [
-  { src: IMG.hero, alt: "Outdoor lounge with rattan seating" },
-  { src: IMG.livingOpen, alt: "Living area seating" },
-  { src: IMG.jacuzzi, alt: "Private jacuzzi" },
-  { src: IMG.bedroom, alt: "Bedroom" },
-  { src: IMG.exterior, alt: "Building exterior" },
-  { src: IMG.livingRoom, alt: "Living room sofa" },
-  { src: IMG.extra1, alt: "Apartment interior" },
+export type TourPhoto = {
+  src: string;
+  alt: string;
+  globalIndex: number;
+};
+
+export type TourSection = {
+  id: string;
+  name: string;
+  subtext: string;
+  thumbSrc: string;
+  layout?: "default" | "triple-mid";
+  images: Omit<TourPhoto, "globalIndex">[];
+};
+
+const tourSectionDefs: TourSection[] = [
+  {
+    id: "living-room-1",
+    name: "Living room 1",
+    subtext: "Sofa · Air conditioning · Ceiling fan · TV",
+    thumbSrc: mus("a9831aeb-f441-44f5-a38f-4cf54e3f0fcf", 240),
+    images: [
+      { src: mus("a9831aeb-f441-44f5-a38f-4cf54e3f0fcf"), alt: "Living room sofa and dining" },
+      { src: mus("a45feaa2-b607-4092-83ac-5fd4b2894959"), alt: "TV console view" },
+      { src: mus("f1da1c3d-0d10-481e-9b63-c71f9073f30b"), alt: "Dining and living room angle" },
+      { src: mus("1c827136-4a85-4fe0-8e69-3fd8ea19bb17"), alt: "Living room seating detail" },
+    ],
+  },
+  {
+    id: "living-room-2",
+    name: "Living room 2",
+    subtext: "Ceiling fan · Hot tub",
+    thumbSrc: mus("090d8b0b-b539-42c0-84f8-e1fb0cdf9a93", 240),
+    images: [
+      { src: mus("090d8b0b-b539-42c0-84f8-e1fb0cdf9a93"), alt: "Outdoor lounge with rattan seating" },
+      { src: mus("9be71047-fc52-438a-9270-75cb470f6752"), alt: "Jacuzzi lounge seating" },
+      { src: mus("f6de1663-4e9c-4414-b63b-29a154a92ee1"), alt: "Private jacuzzi" },
+    ],
+  },
+  {
+    id: "full-kitchen",
+    name: "Full kitchen",
+    subtext:
+      "Freezer · Fridge · Blender · Cooker · Cooking basics · Kettle · Microwave · Toaster · Wine glasses · Coffee · Crockery and cutlery",
+    thumbSrc: mus("0622ab42-b851-4d55-9d9f-df3143bc5909", 240),
+    images: [
+      { src: mus("0622ab42-b851-4d55-9d9f-df3143bc5909"), alt: "Kitchen with refrigerator" },
+      { src: mus("42befad7-fb29-473d-91db-b03e7a544d1d"), alt: "Kitchen counter and dining" },
+    ],
+  },
+  {
+    id: "bedroom",
+    name: "Bedroom",
+    subtext:
+      "Double bed · Air conditioning · Bed linen · Ceiling fan · Clothes storage · Cot · Hangers · Iron · Room-darkening blinds · Cleaning available during stay · Cleaning products · Long-term stays allowed · Private entrance · Wifi",
+    thumbSrc: mus("67c61c6f-6260-4809-9510-0360e58a345d", 240),
+    images: [
+      { src: mus("67c61c6f-6260-4809-9510-0360e58a345d"), alt: "Bedroom with double bed" },
+      { src: mus("c904e1ab-a39d-4ef0-bdea-8c0bd16b9e3d"), alt: "Bedroom window view" },
+      { src: mus("5b856fde-a393-41bf-b373-c9d02e64221f"), alt: "Nightstand and wardrobe" },
+      { src: mus("2367476f-11c4-4a14-a7c6-267be62c1d59"), alt: "Bedroom side view" },
+    ],
+  },
+  {
+    id: "full-bathroom",
+    name: "Full bathroom",
+    subtext: "Hot water · Shower · Mirror",
+    thumbSrc: mus("97c78f8a-5090-4663-aebc-ba4e13b47092", 240),
+    images: [
+      { src: mus("97c78f8a-5090-4663-aebc-ba4e13b47092"), alt: "Bathroom vanity" },
+      { src: mus("608748cd-6ee7-4a71-88a2-ba79d3ddba5a"), alt: "Glass shower enclosure" },
+      { src: mus("48a8ffbc-fbf7-4f84-bc29-ee400da3f08b"), alt: "Bathroom overview" },
+    ],
+  },
+  {
+    id: "gym",
+    name: "Gym",
+    subtext: "Shared fitness center in building",
+    thumbSrc: mus("9aa8e65f-94ac-4ba0-9a10-9ec91e536d22", 240),
+    images: [
+      { src: mus("9aa8e65f-94ac-4ba0-9a10-9ec91e536d22"), alt: "Fitness equipment" },
+      { src: mus("3c90338e-86b4-423f-aae1-279e0ccc3a18"), alt: "Gym treadmill and weights" },
+    ],
+  },
+  {
+    id: "exterior",
+    name: "Exterior",
+    subtext: "Building facade & surroundings",
+    thumbSrc: mus("23ea6621-6f74-4baa-acea-2fd03e312b41", 240),
+    images: [
+      { src: mus("23ea6621-6f74-4baa-acea-2fd03e312b41"), alt: "Building exterior" },
+      { src: mus("9642a60d-e9de-4e1a-89c2-9ebd230f4a74"), alt: "Entrance and courtyard" },
+    ],
+  },
+  {
+    id: "pool",
+    name: "Pool",
+    subtext: "Shared outdoor swimming pool",
+    thumbSrc: mus("fc02f48f-a937-42c5-895d-f9cc3113d6ca", 240),
+    images: [
+      { src: mus("fc02f48f-a937-42c5-895d-f9cc3113d6ca"), alt: "Swimming pool" },
+      { src: mus("3c6e6809-1bb1-47a6-8e24-aff593e1c28f"), alt: "Pool deck loungers" },
+      { src: mus("79addceb-8c2d-419b-80ff-e29af426a94c"), alt: "Pool reflection" },
+    ],
+  },
+  {
+    id: "additional-photos",
+    name: "Additional photos",
+    subtext: "",
+    thumbSrc: mus("8eb65a8b-e795-4870-b141-6f63b1be24ae", 240),
+    layout: "triple-mid",
+    images: [
+      { src: mus("56c44812-52c0-4481-90d8-101ec1f34c7a"), alt: "Kitchen sink and washer" },
+      { src: mus("8eb65a8b-e795-4870-b141-6f63b1be24ae"), alt: "Lounge seating" },
+      { src: mus("34529829-a971-44d3-ac2f-90ea3678a34d"), alt: "Dining area" },
+      { src: mus("153aa732-4935-48b8-a6fe-b469b6af5efc"), alt: "Jacuzzi seating" },
+      { src: mus("70325367-cbae-4993-b560-18cd3f6edd53"), alt: "Living room with television" },
+    ],
+  },
+];
+
+let photoIndex = 0;
+export const tourSections = tourSectionDefs.map((section) => ({
+  ...section,
+  images: section.images.map((img) => ({ ...img, globalIndex: photoIndex++ })),
+}));
+
+export const photos: TourPhoto[] = tourSections.flatMap((s) => s.images);
+
+export const heroPhotos = [
+  photos[4],
+  photos[0],
+  photos[9],
+  photos[6],
+  photos[18],
 ];
 
 export const amenities = [

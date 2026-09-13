@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import {
   amenities,
   cohosts,
+  heroPhotos,
   IMG,
   listing,
   mentionTags,
@@ -11,6 +12,8 @@ import {
   photos,
   reviews,
 } from "@/data/listing";
+import PhotoTour from "./PhotoTour";
+import Lightbox from "./Lightbox";
 import {
   AmenityIcon,
   BanIcon,
@@ -123,6 +126,36 @@ export default function ListingPage() {
   const [guests, setGuests] = useState(listing.guests);
   const [openGuests, setOpenGuests] = useState(false);
   const [photoTour, setPhotoTour] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [tourFocusIndex, setTourFocusIndex] = useState<number | null>(null);
+
+  const setTourModal = (open: boolean) => {
+    const url = new URL(window.location.href);
+    if (open) url.searchParams.set("modal", "PHOTO_TOUR_SCROLLABLE");
+    else url.searchParams.delete("modal");
+    window.history.pushState({}, "", url);
+    setPhotoTour(open);
+    if (!open) {
+      setLightboxIndex(null);
+      setTourFocusIndex(null);
+    }
+  };
+
+  const openTour = (photoIndex?: number) => {
+    setTourFocusIndex(photoIndex ?? null);
+    setTourModal(true);
+  };
+
+  useEffect(() => {
+    const syncFromUrl = () => {
+      const modal = new URLSearchParams(window.location.search).get("modal");
+      setPhotoTour(modal === "PHOTO_TOUR_SCROLLABLE");
+      if (modal !== "PHOTO_TOUR_SCROLLABLE") setLightboxIndex(null);
+    };
+    syncFromUrl();
+    window.addEventListener("popstate", syncFromUrl);
+    return () => window.removeEventListener("popstate", syncFromUrl);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setShowSticky(window.scrollY > 520);
@@ -147,7 +180,7 @@ export default function ListingPage() {
     return () => obs.disconnect();
   }, []);
 
-  const gallery = useMemo(() => photos.slice(0, 5), []);
+  const gallery = useMemo(() => heroPhotos, []);
 
   return (
     <>
@@ -211,22 +244,24 @@ export default function ListingPage() {
           </div>
 
           <div className="photo-grid relative mb-[32px] group">
-            {gallery.map((p, i) => (
+            {gallery.map((p) => (
               <button
                 key={p.src}
                 type="button"
-                onClick={() => setPhotoTour(true)}
+                onClick={() => openTour(p.globalIndex)}
                 className="relative overflow-hidden bg-[#DDD] h-full w-full"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={p.src} alt={p.alt} className="absolute inset-0 w-full h-full object-cover hover:brightness-90 transition" />
-                {i === 4 && (
-                  <span className="absolute bottom-[16px] right-[16px] h-[34px] px-[14px] rounded-lg bg-white border border-[#222] text-[14px] font-semibold flex items-center gap-[8px]">
-                    <GridIcon /> Show all photos
-                  </span>
-                )}
               </button>
             ))}
+            <button
+              type="button"
+              onClick={() => openTour()}
+              className="absolute bottom-[16px] right-[16px] z-10 h-[34px] px-[14px] rounded-lg bg-white border border-[#222] text-[14px] font-semibold flex items-center gap-[8px]"
+            >
+              <GridIcon /> Show all photos
+            </button>
           </div>
         </section>
 
@@ -684,20 +719,25 @@ export default function ListingPage() {
       </div>
 
       {photoTour && (
-        <div className="fixed inset-0 z-50 bg-white overflow-y-auto">
-          <div className="listing-shell py-[20px]">
-            <button onClick={() => setPhotoTour(false)} className="text-[14px] font-semibold px-3 py-2 rounded-lg hover:bg-[#F7F7F7]">
-              ✕ Close
-            </button>
-            <h2 className="text-[22px] font-semibold mt-4 mb-6">Photo tour</h2>
-            <div className="grid grid-cols-2 gap-3">
-              {photos.map((p) => (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img key={p.src} src={p.src} alt={p.alt} className="w-full h-[280px] object-cover rounded-xl" />
-              ))}
-            </div>
-          </div>
-        </div>
+        <PhotoTour
+          saved={saved}
+          onToggleSave={() => setSaved((s) => !s)}
+          onClose={() => setTourModal(false)}
+          onSelectPhoto={(index) => setLightboxIndex(index)}
+          initialPhotoIndex={tourFocusIndex}
+          closeOnEscape={lightboxIndex === null}
+        />
+      )}
+
+      {lightboxIndex !== null && (
+        <Lightbox
+          images={photos}
+          currentIndex={lightboxIndex}
+          saved={saved}
+          onToggleSave={() => setSaved((s) => !s)}
+          onClose={() => setLightboxIndex(null)}
+          onIndexChange={setLightboxIndex}
+        />
       )}
     </>
   );

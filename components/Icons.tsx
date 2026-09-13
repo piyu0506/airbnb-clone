@@ -93,6 +93,22 @@ export const Chevron = ({ dir = "left", ...p }: P & { dir?: "left" | "right" }) 
   </svg>
 );
 
+export const CloseIcon = (p: P) => (
+  <svg viewBox="0 0 32 32" width="12" height="12" {...p}>
+    <path d="M6 6l20 20M26 6L6 26" {...s} />
+  </svg>
+);
+
+export const NavChevron = ({ dir = "left", ...p }: P & { dir?: "left" | "right" }) => (
+  <svg viewBox="0 0 32 32" width="16" height="16" {...p}>
+    {dir === "left" ? (
+      <path d="M20 8L12 16l8 8" {...s} strokeWidth="2.5" />
+    ) : (
+      <path d="M12 8l8 8-8 8" {...s} strokeWidth="2.5" />
+    )}
+  </svg>
+);
+
 export const PlusIcon = (p: P) => (
   <svg viewBox="0 0 16 16" width="14" height="14" {...p}>
     <path d="M8 3v10M3 8h10" {...s} />
